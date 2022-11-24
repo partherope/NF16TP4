@@ -3,6 +3,4 @@
 #include "BaseDeDonee.h"
 int main()
 {
-
-    return 0;
 }
