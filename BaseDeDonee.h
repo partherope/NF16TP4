@@ -25,17 +25,16 @@ typedef struct Patient
 typedef Patient *Parbre;
 
 
-
-int comparer(char * a, char *b);
+char *strupr(char *str);
+int comparer(char * a, char *b);//a>b 1;a<b 0;a=b -1
 Patient *CreerPatient(char *nm,char *pr);
 void inserer_patient(Parbre * abr, char * nm, char * pr);
 Patient * rechercher_patient(Parbre * abr, char* nm);
 void afficher_fiche(Parbre * abr, char* nm);
 void afficher_patients(Parbre * abr);
-void afficher_patients(Parbre * abr);
 Consultation * CreerConsult(char * date, char* motif, int nivu);
 void ajouter_consultation(Parbre * abr, char * nm, char * date, char* motif, int nivu);
 void supprimer_patient(Parbre * abr, char* nm);
 void maj(Parbre * abr, Parbre * abr2);
-char *strupr(char *str);
+
 #endif

@@ -7,42 +7,11 @@ char *ptr = str;
 
 while (*ptr != '\0') {
 if ((*ptr)<=122&&(*ptr)>=97)
-*ptr = (*ptr)-32;
+*ptr = *ptr-32;
 ptr++;
 }
 
 return str;
-}
-
-Patient *CreerPatient(char *nm,char *pr)
-{
-    Patient *NewPatient=(Patient *)malloc(sizeof(Patient));
-    NewPatient->nom=strupr(nm);
-    NewPatient->prenom=pr;
-    return NewPatient;
-}
-
-void inserer_patient(Parbre *abr, char *nm,char *pr)
-{
-    if(abr==NULL)
-    {
-        Patient *NewNode=(Patient *)malloc(sizeof(Patient));
-        if(!NewNode)
-        {
-            printf("Malloc Error!");
-            exit(EXIT_FAILURE);
-        }
-        NewNode->nom=nm;
-        NewNode->prenom=pr;
-        NewNode->nbrconsult=0;
-        NewNode->fils_droit=NewNode->fils_gauche=NULL;
-        NewNode->ListeConsult=NULL;
-        *abr=NewNode;
-    }//l'arbre est vide où on arrive à notre noeud cible
-    else if(comparer((*abr)->nom,nm))
-        inserer_patient(&(*abr)->fils_gauche,nm,pr);
-    else if(comparer((*abr)->nom,nm)==0)
-        inserer_patient(&(*abr)->fils_droit,nm,pr);
 }
 
 int comparer(char * a, char *b){
@@ -52,7 +21,62 @@ int comparer(char * a, char *b){
         else if (*(a+i) < *(b+i)) return 0;
         else if (*(a+i) == *(b+i)) i++;
     }
-    if (strlen(a) > strlen(b)) return 1;
+    if (strlen(a) > strlen(b)) return 1;//la situation comme a[aaab],b[aaa]
     else if (strlen(a) < strlen(b)) return 0;
-    else return -1;
+    else return -1;//si les 2 chaine sont les meme.
+}
+
+Patient *CreerPatient(char *nm,char *pr)
+{
+    Patient *NewPatient=(Patient *)malloc(sizeof(Patient));
+    if(!NewPatient)
+    {
+        printf("Malloc Error!");
+        exit(EXIT_FAILURE);
+    }
+    NewPatient->nom=strupr(nm);
+    NewPatient->prenom=pr;
+    NewPatient->nbrconsult=0;
+    NewPatient->fils_droit=NewPatient->fils_gauche=NULL;
+    NewPatient->ListeConsult=NULL;
+    return NewPatient;
+}
+
+void inserer_patient(Parbre *abr, char *nm,char *pr)
+{
+    if(abr==NULL)
+    {
+        *abr= CreerPatient(nm,pr);
+    }//l'arbre est vide où on arrive à notre noeud cible
+    else if(comparer((*abr)->nom,nm))
+        inserer_patient(&(*abr)->fils_gauche,nm,pr);
+    else if(comparer((*abr)->nom,nm)==0)
+        inserer_patient(&(*abr)->fils_droit,nm,pr);
+}
+
+Patient * rechercher_patient(Parbre * abr, char* nm)
+{
+    Patient *temp=(*abr);
+    while(temp!=NULL)
+    {
+        if(comparer(temp->nom,nm)==1)
+            temp=temp->fils_gauche;
+        else if(comparer(temp->nom,nm)==0)
+            temp=temp->fils_droit;
+        else if(comparer(temp->nom,nm)==-1)
+            return temp;
+    }
+    printf("Il n'y pas de patient %s!",nm);
+    return NULL;
+}
+
+void afficher_fiche(Parbre * abr, char* nm)
+{
+    Patient *cible= rechercher_patient(abr,nm);
+    if(!cible)
+    {
+        printf("Pas de patient %s",nm);
+        return;
+    }
+    //未完成
 }

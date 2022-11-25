@@ -5,7 +5,7 @@
 int main()
 {
 
-	char a[]="aaabbb";
+	char a[]="aaabb";
     char b[]="aaabb";
 //    printf("%c",*(a+14));
 	printf("%d",comparer(a,b));
