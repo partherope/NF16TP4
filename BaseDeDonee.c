@@ -1,8 +1,23 @@
 #include "BaseDeDonee.h"
+#include <string.h>
+
+char *strupr(char *str)
+{
+char *ptr = str;
+
+while (*ptr != '\0') {
+if ((*ptr)<=122&&(*ptr)>=97)
+*ptr = (*ptr)-32;
+ptr++;
+}
+
+return str;
+}
+
 Patient *CreerPatient(char *nm,char *pr)
 {
     Patient *NewPatient=(Patient *)malloc(sizeof(Patient));
-    NewPatient->nom=nm;
+    NewPatient->nom=strupr(nm);
     NewPatient->prenom=pr;
     return NewPatient;
 }

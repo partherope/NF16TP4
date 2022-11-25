@@ -32,5 +32,5 @@ Consultation * CreerConsult(char * date, char* motif, int nivu);
 void ajouter_consultation(Parbre * abr, char * nm, char * date, char* motif, int nivu);
 void supprimer_patient(Parbre * abr, char* nm);
 void maj(Parbre * abr, Parbre * abr2);
-
+char *strupr(char *str);
 #endif

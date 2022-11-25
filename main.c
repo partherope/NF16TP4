@@ -3,4 +3,8 @@
 #include "BaseDeDonee.h"
 int main()
 {
+
+	char a[]="aaabbb";
+	printf("%s",strupr(a));
+
 }
