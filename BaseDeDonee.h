@@ -2,6 +2,8 @@
 #define NF16TP4_BASEDEDONEE_H
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
+
 typedef struct Consultation
 {
     char *data;//JJ-MM-AAAA
@@ -22,6 +24,8 @@ typedef struct Patient
 }Patient;
 typedef Patient *Parbre;
 
+
+int comparer(char * a, char *b);
 Patient *CreerPatient(char *nm,char *pr);
 void inserer_patient(Parbre * abr, char * nm, char * pr);
 Patient * rechercher_patient(Parbre * abr, char* nm);

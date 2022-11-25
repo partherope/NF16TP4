@@ -5,6 +5,8 @@ int main()
 {
 
 	char a[]="aaabbb";
-	printf("%s",strupr(a));
+    char b[]="aab";
+//    printf("%c",*(a+1));
+	printf("%d",comparer(a,b));
 
 }

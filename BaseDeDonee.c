@@ -44,3 +44,12 @@ void inserer_patient(Parbre *abr, char *nm,char *pr)
     else if((*abr)->nom[0]>nm[0])
         inserer_patient(&(*abr)->fils_droit,nm,pr);
 }
+
+int comparer(char * a, char *b){
+    int i=0;
+    while(1){
+        if(*(a+i) > *(b+i)) return 1;
+        else if (*(a+i) < *(b+i)) return 0;
+        else if (*(a+i) == *(b+i)) i++;
+    }
+}
