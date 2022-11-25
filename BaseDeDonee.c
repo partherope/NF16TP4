@@ -39,9 +39,9 @@ void inserer_patient(Parbre *abr, char *nm,char *pr)
         NewNode->ListeConsult=NULL;
         *abr=NewNode;
     }//l'arbre est vide où on arrive à notre noeud cible
-    else if((*abr)->nom[0]>nm[0])
+    else if(comparer((*abr)->nom,nm))
         inserer_patient(&(*abr)->fils_gauche,nm,pr);
-    else if((*abr)->nom[0]>nm[0])
+    else if(comparer((*abr)->nom,nm)==0)
         inserer_patient(&(*abr)->fils_droit,nm,pr);
 }
 
