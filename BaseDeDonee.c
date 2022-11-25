@@ -53,6 +53,6 @@ int comparer(char * a, char *b){
         else if (*(a+i) == *(b+i)) i++;
     }
     if (strlen(a) > strlen(b)) return 1;
-    if (strlen(a) < strlen(b)) return 0;
+    else if (strlen(a) < strlen(b)) return 0;
     else return -1;
 }
