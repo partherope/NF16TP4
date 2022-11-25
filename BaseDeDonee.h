@@ -25,6 +25,7 @@ typedef struct Patient
 typedef Patient *Parbre;
 
 
+
 int comparer(char * a, char *b);
 Patient *CreerPatient(char *nm,char *pr);
 void inserer_patient(Parbre * abr, char * nm, char * pr);

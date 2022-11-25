@@ -47,9 +47,12 @@ void inserer_patient(Parbre *abr, char *nm,char *pr)
 
 int comparer(char * a, char *b){
     int i=0;
-    while(1){
+    while(i<strlen(a) || i<strlen(a)){
         if(*(a+i) > *(b+i)) return 1;
         else if (*(a+i) < *(b+i)) return 0;
         else if (*(a+i) == *(b+i)) i++;
     }
+    if (strlen(a) > strlen(b)) return 1;
+    if (strlen(a) < strlen(b)) return 0;
+    else return -1;
 }
