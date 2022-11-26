@@ -66,7 +66,7 @@ Patient * rechercher_patient(Parbre * abr, char* nm)
         else if(comparer(temp->nom,nm)==-1)
             return temp;
     }
-    printf("Il n'y pas de patient %s!",nm);
+    printf("Il n'y pas de patient %s!\n",nm);
     return NULL;
 }
 
@@ -78,5 +78,11 @@ void afficher_fiche(Parbre * abr, char* nm)
         printf("Pas de patient %s",nm);
         return;
     }
-    //未完成
+    printf("Informations de le/la patient:\n",nm);
+    printf("Nom:%s, Prénom:%s, numbre de consultations:%d",cible->nom,cible->prenom, cible->nbrconsult);
+    printf("Le/la patient(e) a eu %d consultations",cible->nbrconsult);
+    for(Consultation *temp=cible->ListeConsult;temp!=NULL;temp=temp->suivant)
+    {
+        printf("Date:%s | Motif:%s | Niveau urgent:%d\n",temp->data,temp->motif,temp->niveauUrg);
+    }
 }
