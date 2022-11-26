@@ -1,5 +1,22 @@
 #include "BaseDeDonee.h"
 #include <string.h>
+char* MajusculeString(char *a)
+{
+    char *returnvalue= malloc((strlen(a)+1)* sizeof(char));
+    int i=0;
+    while(*(a+i)!='\0')
+    {
+
+        if(*(a+i)>='a' && *(a+i)<='z')
+            returnvalue[i]=*(a+i)-32;
+        else
+            returnvalue[i]=*(a+i);
+        i++;
+    }
+    returnvalue[i]='\0';
+    return returnvalue;
+}
+
 int comparer(char * a, char *b){
     int i=0;
     while(i<strlen(a) || i<strlen(a)){
@@ -49,32 +66,40 @@ Patient *CreerPatient(char *nm,char *pr)
         printf("Malloc Error!");
         exit(EXIT_FAILURE);
     }
-    //错误出现位置
-    NewPatient->nom= strupr(nm);
-    //错误出现位置
-    NewPatient->prenom=pr;
+    NewPatient->nom = MajusculeString(nm);
+    NewPatient->prenom=MajusculeString(pr);
     NewPatient->nbrconsult=0;
     NewPatient->fils_droit=NewPatient->fils_gauche=NULL;
     NewPatient->ListeConsult=NULL;
-    printf("创建完成");
     return NewPatient;
 }
 
 void inserer_patient(Parbre *abr, char *nm,char *pr)
 {
+    char *temp=NULL;
+    temp= MajusculeString(nm);//傻逼c语言，非要这么写才能不和局部变量冲突
     if((*abr)==NULL)
     {
+
         (*abr) = CreerPatient(nm,pr);
     }//l'arbre est vide où on arrive à notre noeud cible
-    else if(comparer((*abr)->nom,nm)==1)
+    else if(comparer((*abr)->nom, temp)==1)
     {
+
         inserer_patient(&((*abr)->fils_gauche),nm,pr);
     }
 
     else if(comparer((*abr)->nom,nm)==0)
+    {
         inserer_patient(&(*abr)->fils_droit,nm,pr);
+    }
+
     else if(comparer((*abr)->nom,nm)==-1)
+    {
         printf("Failure! Le patient %s existe",nm);
+        free(temp);
+    }
+
 }
 
 Patient * rechercher_patient(Parbre * abr, char* nm)

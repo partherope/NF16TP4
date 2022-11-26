@@ -24,7 +24,7 @@ typedef struct Patient
 }Patient;
 typedef Patient *Parbre;
 
-
+char * MajusculeString(char *a);
 int comparer(char * a, char *b);//a>b 1;a<b 0;a=b -1
 void supprimerConsltation(Consultation *Liste);//une fonction recursive pour liberer la memoire de Consultation
 Patient * rechercher_node_parent(Parbre * abr, char* nm);
