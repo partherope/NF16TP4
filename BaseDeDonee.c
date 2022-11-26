@@ -1,19 +1,5 @@
 #include "BaseDeDonee.h"
 #include <string.h>
-
-char *strupr(char *str)
-{
-char *ptr = str;
-
-while (*ptr != '\0') {
-if ((*ptr)<=122&&(*ptr)>=97)
-*ptr = *ptr-32;
-ptr++;
-}
-
-return str;
-}
-
 int comparer(char * a, char *b){
     int i=0;
     while(i<strlen(a) || i<strlen(a)){
@@ -33,7 +19,7 @@ void supprimerConsltation(Consultation *Liste)
     free(Liste);
 }
 
-Patient * rechercher_node_parent(Parbre * abr, char* nm)//瀵绘壘鐩爣缁撶偣鐨勭埗鑺傜偣
+Patient * rechercher_node_parent(Parbre * abr, char* nm)//寻找目标结点的父节点
 {
     Patient *temp=(*abr);
     Patient *Parent=NULL;
@@ -68,17 +54,21 @@ Patient *CreerPatient(char *nm,char *pr)
     NewPatient->nbrconsult=0;
     NewPatient->fils_droit=NewPatient->fils_gauche=NULL;
     NewPatient->ListeConsult=NULL;
+    printf("创建完成");
     return NewPatient;
 }
 
 void inserer_patient(Parbre *abr, char *nm,char *pr)
 {
-    if(abr==NULL)
+    if((*abr)==NULL)
     {
-        *abr= CreerPatient(nm,pr);
-    }//l'arbre est vide o霉 on arrive 脿 notre noeud cible
-    else if(comparer((*abr)->nom,nm))
-        inserer_patient(&(*abr)->fils_gauche,nm,pr);
+        (*abr) = CreerPatient(nm,pr);
+    }//l'arbre est vide où on arrive à notre noeud cible
+    else if(comparer((*abr)->nom,nm)==1)
+    {
+        inserer_patient(&((*abr)->fils_gauche),nm,pr);
+    }
+
     else if(comparer((*abr)->nom,nm)==0)
         inserer_patient(&(*abr)->fils_droit,nm,pr);
     else if(comparer((*abr)->nom,nm)==-1)
@@ -110,7 +100,7 @@ void afficher_fiche(Parbre * abr, char* nm)
         return;
     }
     printf("Informations de le/la patient:\n",nm);
-    printf("Nom:%s, Pr茅nom:%s, numbre de consultations:%d",cible->nom,cible->prenom, cible->nbrconsult);
+    printf("Nom:%s, Prénom:%s, numbre de consultations:%d",cible->nom,cible->prenom, cible->nbrconsult);
     printf("Le/la patient(e) a eu %d consultations",cible->nbrconsult);
     for(Consultation *temp=cible->ListeConsult;temp!=NULL;temp=temp->suivant)
     {
@@ -123,7 +113,7 @@ void afficher_patients(Parbre * abr)
 {
     if(abr)
     {
-        printf("Nom: %s | Pr茅nom: %s",(*abr)->nom,(*abr)->prenom);
+        printf("Nom: %s | Prénom: %s",(*abr)->nom,(*abr)->prenom);
         afficher_patients(&(*abr)->fils_gauche);
         afficher_patients(&(*abr)->fils_droit);
     }
