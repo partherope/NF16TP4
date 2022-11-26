@@ -26,6 +26,13 @@ int comparer(char * a, char *b){
     else return -1;//si les 2 chaine sont les meme.
 }
 
+void supprimerConsltation(Consultation *Liste)
+{
+    if(Liste->suivant!=NULL)
+        supprimerConsltation(Liste->suivant);
+    free(Liste);
+}
+
 Patient *CreerPatient(char *nm,char *pr)
 {
     Patient *NewPatient=(Patient *)malloc(sizeof(Patient));
@@ -83,6 +90,49 @@ void afficher_fiche(Parbre * abr, char* nm)
     printf("Le/la patient(e) a eu %d consultations",cible->nbrconsult);
     for(Consultation *temp=cible->ListeConsult;temp!=NULL;temp=temp->suivant)
     {
-        printf("Date:%s | Motif:%s | Niveau urgent:%d\n",temp->data,temp->motif,temp->niveauUrg);
+        printf("Date:%s | Motif:%s | Niveau urgent:%d\n",temp->date,temp->motif,temp->niveauUrg);
     }
+    putchar('\n');
+}
+
+void afficher_patients(Parbre * abr)
+{
+    if(abr)
+    {
+        printf("Nom: %s | Prénom: %s",(*abr)->nom,(*abr)->prenom);
+        afficher_patients(&(*abr)->fils_gauche);
+        afficher_patients(&(*abr)->fils_droit);
+    }
+}
+
+Consultation * CreerConsult(char * date, char* motif, int nivu)
+{
+    Consultation *NewCons=(Consultation *) malloc(sizeof(Consultation));
+    if(!NewCons)
+    {
+        printf("Malloc Error!");
+        exit(EXIT_FAILURE);
+    }
+    NewCons->date=date;
+    NewCons->motif=motif;
+    NewCons->niveauUrg=nivu;
+    return NewCons;
+}
+
+void ajouter_consultation(Parbre * abr, char * nm, char * date, char* motif, int nivu)
+{
+    Patient *CilbePatient= rechercher_patient(abr,nm);
+    if(!CilbePatient)
+    {
+        printf("On trouve pas le patient %s",nm);
+        exit(EXIT_FAILURE);
+    }
+    Consultation *temp=CilbePatient->ListeConsult;
+    for(;temp->suivant!=NULL;temp=temp->suivant);
+    temp->suivant= CreerConsult(date,motif,nivu);
+}
+
+void supprimer_patient(Parbre * abr, char* nm)
+{
+
 }

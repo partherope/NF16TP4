@@ -6,7 +6,7 @@
 
 typedef struct Consultation
 {
-    char *data;//JJ-MM-AAAA
+    char *date;//JJ-MM-AAAA
     char *motif;
     int niveauUrg;
     struct Consultation *suivant;
@@ -27,6 +27,8 @@ typedef Patient *Parbre;
 
 char *strupr(char *str);
 int comparer(char * a, char *b);//a>b 1;a<b 0;a=b -1
+void supprimerConsltation(Consultation *Liste);//une fonction recursive pour liberer la memoire de Consultation
+
 Patient *CreerPatient(char *nm,char *pr);
 void inserer_patient(Parbre * abr, char * nm, char * pr);
 Patient * rechercher_patient(Parbre * abr, char* nm);
