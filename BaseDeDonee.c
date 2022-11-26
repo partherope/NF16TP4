@@ -49,7 +49,9 @@ Patient *CreerPatient(char *nm,char *pr)
         printf("Malloc Error!");
         exit(EXIT_FAILURE);
     }
-    NewPatient->nom=strupr(nm);
+    //错误出现位置
+    NewPatient->nom= strupr(nm);
+    //错误出现位置
     NewPatient->prenom=pr;
     NewPatient->nbrconsult=0;
     NewPatient->fils_droit=NewPatient->fils_gauche=NULL;
