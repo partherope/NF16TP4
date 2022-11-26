@@ -33,6 +33,28 @@ void supprimerConsltation(Consultation *Liste)
     free(Liste);
 }
 
+Patient * rechercher_node_parent(Parbre * abr, char* nm)//寻找目标结点的父节点
+{
+    Patient *temp=(*abr);
+    Patient *Parent=NULL;
+    while(temp!=NULL)
+    {
+        if(comparer(temp->nom,nm)==1)
+        {
+            Parent=temp;
+            temp=temp->fils_gauche;
+        }
+        else if(comparer(temp->nom,nm)==0)
+        {
+            Parent=temp;
+            temp=temp->fils_droit;
+        }
+        else if(comparer(temp->nom,nm)==-1)
+            return Parent;
+    }
+    return NULL;
+}
+
 Patient *CreerPatient(char *nm,char *pr)
 {
     Patient *NewPatient=(Patient *)malloc(sizeof(Patient));
@@ -59,6 +81,8 @@ void inserer_patient(Parbre *abr, char *nm,char *pr)
         inserer_patient(&(*abr)->fils_gauche,nm,pr);
     else if(comparer((*abr)->nom,nm)==0)
         inserer_patient(&(*abr)->fils_droit,nm,pr);
+    else if(comparer((*abr)->nom,nm)==-1)
+        printf("Failure! Le patient %s existe",nm);
 }
 
 Patient * rechercher_patient(Parbre * abr, char* nm)
@@ -121,18 +145,24 @@ Consultation * CreerConsult(char * date, char* motif, int nivu)
 
 void ajouter_consultation(Parbre * abr, char * nm, char * date, char* motif, int nivu)
 {
-    Patient *CilbePatient= rechercher_patient(abr,nm);
-    if(!CilbePatient)
+    Patient *CiblePatient= rechercher_patient(abr,nm);
+    if(!CiblePatient)
     {
         printf("On trouve pas le patient %s",nm);
         exit(EXIT_FAILURE);
     }
-    Consultation *temp=CilbePatient->ListeConsult;
+    Consultation *temp=CiblePatient->ListeConsult;
     for(;temp->suivant!=NULL;temp=temp->suivant);
     temp->suivant= CreerConsult(date,motif,nivu);
+    CiblePatient->nbrconsult++;
 }
 
-void supprimer_patient(Parbre * abr, char* nm)
-{
-
-}
+//void supprimer_patient(Parbre * abr, char* nm)
+//{
+//    Patient *target= rechercher_patient(abr,nm);
+//    if(target->fils_droit==NULL && target->fils_gauche==NULL)
+//    {
+//        supprimerConsltation(target->ListeConsult);
+//        free(target);
+//    }
+//}
