@@ -4,10 +4,8 @@
 #include "BaseDeDonee.h"
 int main()
 {
-
-	char a[]="aaabb";
-    char b[]="aaabb";
-//    printf("%c",*(a+14));
-	printf("%d",comparer(a,b));
-
+    Parbre head=CreerPatient("GAO","Yuan");
+//    inserer_patient(&head,"GAO","Yuan");
+    printf("%d", comparer((*head).nom,"GAO"));
+	return 0;
 }
