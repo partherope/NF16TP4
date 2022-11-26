@@ -39,7 +39,7 @@ void supprimerConsltation(Consultation *Liste)
 Patient * rechercher_node_parent(Parbre * abr, char* nm)//寻找目标结点的父节点
 {
     Patient *temp=(*abr);
-    Patient *Parent=NULL;
+    Patient *Parent=temp;
     while(temp!=NULL)
     {
         if(comparer(temp->nom,nm)==1)
@@ -138,9 +138,9 @@ void afficher_fiche(Parbre * abr, char* nm)
 
 void afficher_patients(Parbre * abr)
 {
-    if(abr)
+    if(*abr)
     {
-        printf("Nom: %s | Prénom: %s",(*abr)->nom,(*abr)->prenom);
+        printf("Nom: %s | Prénom: %s\n",(*abr)->nom,(*abr)->prenom);
         afficher_patients(&(*abr)->fils_gauche);
         afficher_patients(&(*abr)->fils_droit);
     }
@@ -148,7 +148,7 @@ void afficher_patients(Parbre * abr)
 
 Consultation * CreerConsult(char * date, char* motif, int nivu)
 {
-    Consultation *NewCons=(Consultation *) malloc(sizeof(Consultation));
+    Consultation *NewCons=(Consultation *)malloc(sizeof(Consultation));
     if(!NewCons)
     {
         printf("Malloc Error!");
@@ -174,12 +174,43 @@ void ajouter_consultation(Parbre * abr, char * nm, char * date, char* motif, int
     CiblePatient->nbrconsult++;
 }
 
-//void supprimer_patient(Parbre * abr, char* nm)
-//{
-//    Patient *target= rechercher_patient(abr,nm);
-//    if(target->fils_droit==NULL && target->fils_gauche==NULL)
-//    {
-//        supprimerConsltation(target->ListeConsult);
-//        free(target);
-//    }
-//}
+void supprimer_patient(Parbre * abr, char* nm)
+{
+    Patient *target= rechercher_patient(abr,nm);
+    if(target->fils_droit==NULL && target->fils_gauche==NULL)//左右子树均空
+    {
+        Patient *Parent= rechercher_node_parent(abr,nm);
+        if(Parent==target)//删除的结点正好是根结点
+        {
+            supprimerConsltation(target->ListeConsult);
+            free(target->nom);
+            free(target->prenom);
+            free(target);
+        }
+        else if(Parent->fils_gauche==target)//被删除的结点属于左子树
+        {
+            Parent->fils_gauche=NULL;
+            supprimerConsltation(target->ListeConsult);
+            free(target->nom);
+            free(target->prenom);
+            free(target);
+        }
+        else if(Parent->fils_droit==target)//被删除的结点属于右子树
+        {
+            Parent->fils_droit=NULL;
+            supprimerConsltation(target->ListeConsult);
+            free(target->nom);
+            free(target->prenom);
+            free(target);
+        }
+
+    }
+    else if(target->fils_droit==NULL && target->fils_gauche!=NULL)//右子树空，左子树非空
+    {
+
+    }
+    else if(target->fils_droit!=NULL && target->fils_gauche==NULL)//左子树空，右子树非空
+    {
+
+    }
+}

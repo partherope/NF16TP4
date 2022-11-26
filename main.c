@@ -6,6 +6,10 @@
 //×îºóÊÍ·ÅÊ÷
 int main()
 {
-
+    Patient *test=NULL;
+    Parbre head= test;
+    inserer_patient(&head,"GAo","Yuan");
+    inserer_patient(&head,"GAen","Wenlong");
+    Patient *a= rechercher_node_parent(&head,"GAEN");
 	return 0;
 }
