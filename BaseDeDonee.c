@@ -36,7 +36,7 @@ void supprimerConsltation(Consultation *Liste)
     free(Liste);
 }
 
-Patient * rechercher_node_parent(Parbre * abr, char* nm)//Ñ°ÕÒÄ¿±ê½áµãµÄ¸¸½Úµã
+Patient * rechercher_node_parent(Parbre * abr, char* nm)//å¯»æ‰¾ç›®æ ‡ç»“ç‚¹çš„çˆ¶èŠ‚ç‚¹
 {
     Patient *temp=(*abr);
     Patient *Parent=temp;
@@ -77,12 +77,12 @@ Patient *CreerPatient(char *nm,char *pr)
 void inserer_patient(Parbre *abr, char *nm,char *pr)
 {
     char *temp=NULL;
-    temp= MajusculeString(nm);//Éµ±ÆcÓïÑÔ£¬·ÇÒªÕâÃ´Ð´²ÅÄÜ²»ºÍ¾Ö²¿±äÁ¿³åÍ»
+    temp= MajusculeString(nm);//å‚»é€¼cè¯­è¨€ï¼Œéžè¦è¿™ä¹ˆå†™æ‰èƒ½ä¸å’Œå±€éƒ¨å˜é‡å†²çª
     if((*abr)==NULL)
     {
 
         (*abr) = CreerPatient(nm,pr);
-    }//l'arbre est vide o¨´ on arrive ¨¤ notre noeud cible
+    }//l'arbre est vide oÃ¹ on arrive Ã  notre noeud cible
     else if(comparer((*abr)->nom, temp)==1)
     {
 
@@ -127,7 +127,7 @@ void afficher_fiche(Parbre * abr, char* nm)
         return;
     }
     printf("Informations de le/la patient:\n",nm);
-    printf("Nom:%s, Pr¨¦nom:%s, numbre de consultations:%d",cible->nom,cible->prenom, cible->nbrconsult);
+    printf("Nom:%s, PrÃ©nom:%s, numbre de consultations:%d",cible->nom,cible->prenom, cible->nbrconsult);
     printf("Le/la patient(e) a eu %d consultations",cible->nbrconsult);
     for(Consultation *temp=cible->ListeConsult;temp!=NULL;temp=temp->suivant)
     {
@@ -140,7 +140,7 @@ void afficher_patients(Parbre * abr)
 {
     if(*abr)
     {
-        printf("Nom: %s | Pr¨¦nom: %s\n",(*abr)->nom,(*abr)->prenom);
+        printf("Nom: %s | PrÃ©nom: %s\n",(*abr)->nom,(*abr)->prenom);
         afficher_patients(&(*abr)->fils_gauche);
         afficher_patients(&(*abr)->fils_droit);
     }
@@ -177,17 +177,17 @@ void ajouter_consultation(Parbre * abr, char * nm, char * date, char* motif, int
 void supprimer_patient(Parbre * abr, char* nm)
 {
     Patient *target= rechercher_patient(abr,nm);
-    if(target->fils_droit==NULL && target->fils_gauche==NULL)//×óÓÒ×ÓÊ÷¾ù¿Õ
+    if(target->fils_droit==NULL && target->fils_gauche==NULL)//å·¦å³å­æ ‘å‡ç©º
     {
         Patient *Parent= rechercher_node_parent(abr,nm);
-        if(Parent==target)//É¾³ýµÄ½áµãÕýºÃÊÇ¸ù½áµã
+        if(Parent==target)//åˆ é™¤çš„ç»“ç‚¹æ­£å¥½æ˜¯æ ¹ç»“ç‚¹
         {
             supprimerConsltation(target->ListeConsult);
             free(target->nom);
             free(target->prenom);
             free(target);
         }
-        else if(Parent->fils_gauche==target)//±»É¾³ýµÄ½áµãÊôÓÚ×ó×ÓÊ÷
+        else if(Parent->fils_gauche==target)//è¢«åˆ é™¤çš„ç»“ç‚¹å±žäºŽå·¦å­æ ‘
         {
             Parent->fils_gauche=NULL;
             supprimerConsltation(target->ListeConsult);
@@ -195,7 +195,7 @@ void supprimer_patient(Parbre * abr, char* nm)
             free(target->prenom);
             free(target);
         }
-        else if(Parent->fils_droit==target)//±»É¾³ýµÄ½áµãÊôÓÚÓÒ×ÓÊ÷
+        else if(Parent->fils_droit==target)//è¢«åˆ é™¤çš„ç»“ç‚¹å±žäºŽå³å­æ ‘
         {
             Parent->fils_droit=NULL;
             supprimerConsltation(target->ListeConsult);
@@ -205,12 +205,36 @@ void supprimer_patient(Parbre * abr, char* nm)
         }
 
     }
-    else if(target->fils_droit==NULL && target->fils_gauche!=NULL)//ÓÒ×ÓÊ÷¿Õ£¬×ó×ÓÊ÷·Ç¿Õ
+    else if(target->fils_droit==NULL && target->fils_gauche!=NULL)//å³å­æ ‘ç©ºï¼Œå·¦å­æ ‘éžç©º
     {
-
+        Patient *Parent=rechercher_node_parent(abr,nm);
+        if(comparer(Parent->nom,target->nom)==1)
+        {
+            Parent->fils_gauche=target->fils_gauche;
+        }
+        else if(comparer(Parent->nom,target->nom)==0)
+        {
+            Parent->fils_droit=target->fils_gauche;
+        }
+        supprimerConsltation(target->ListeConsult);
+        free(target->nom);
+        free(target->prenom);
+        free(target);
     }
-    else if(target->fils_droit!=NULL && target->fils_gauche==NULL)//×ó×ÓÊ÷¿Õ£¬ÓÒ×ÓÊ÷·Ç¿Õ
+    else if(target->fils_droit!=NULL && target->fils_gauche==NULL)//å·¦å­æ ‘ç©ºï¼Œå³å­æ ‘éžç©º
     {
-
+        Patient *Parent=rechercher_node_parent(abr,nm);
+        if(comparer(Parent->nom,target->nom)==1)
+        {
+            Parent->fils_gauche=target->fils_droit;
+        }
+        else if(comparer(Parent->nom,target->nom)==0)
+        {
+            Parent->fils_droit=target->fils_droit;
+        }
+        supprimerConsltation(target->ListeConsult);
+        free(target->nom);
+        free(target->prenom);
+        free(target);
     }
 }
