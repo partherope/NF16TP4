@@ -31,8 +31,12 @@ int comparer(char * a, char *b){
 
 void supprimerConsltation(Consultation *Liste)
 {
+    if(Liste!=NULL){
     if(Liste->suivant!=NULL)
         supprimerConsltation(Liste->suivant);
+        free(Liste->date);
+        free(Liste->motif);
+    }
     free(Liste);
 }
 
@@ -105,6 +109,7 @@ void inserer_patient(Parbre *abr, char *nm,char *pr)
 Patient * rechercher_patient(Parbre * abr, char* nm)
 {
     Patient *temp=(*abr);
+    nm = MajusculeString(nm);
     while(temp!=NULL)
     {
         if(comparer(temp->nom,nm)==1)
@@ -115,6 +120,7 @@ Patient * rechercher_patient(Parbre * abr, char* nm)
             return temp;
     }
     printf("Il n'y pas de patient %s!\n",nm);
+    free(nm);
     return NULL;
 }
 
@@ -123,12 +129,11 @@ void afficher_fiche(Parbre * abr, char* nm)
     Patient *cible= rechercher_patient(abr,nm);
     if(!cible)
     {
-        printf("Pas de patient %s",nm);
+//        printf("Pas de patient %s",nm); //在rechercher函数中已经会提示了
         return;
     }
     printf("Informations de le/la patient:\n",nm);
-    printf("Nom:%s, Prénom:%s, numbre de consultations:%d",cible->nom,cible->prenom, cible->nbrconsult);
-    printf("Le/la patient(e) a eu %d consultations",cible->nbrconsult);
+    printf("Nom:%s, Prénom:%s, numbre de consultations:%d\n",cible->nom,cible->prenom, cible->nbrconsult);
     for(Consultation *temp=cible->ListeConsult;temp!=NULL;temp=temp->suivant)
     {
         printf("Date:%s | Motif:%s | Niveau urgent:%d\n",temp->date,temp->motif,temp->niveauUrg);
@@ -148,15 +153,19 @@ void afficher_patients(Parbre * abr)
 
 Consultation * CreerConsult(char * date, char* motif, int nivu)
 {
+
     Consultation *NewCons=(Consultation *)malloc(sizeof(Consultation));
     if(!NewCons)
     {
         printf("Malloc Error!");
         exit(EXIT_FAILURE);
     }
-    NewCons->date=date;
-    NewCons->motif=motif;
+    NewCons->date= malloc(sizeof(char));
+    NewCons->motif= malloc(sizeof(char));
+    strcpy(NewCons->date,date);
+    strcpy(NewCons->motif,motif);
     NewCons->niveauUrg=nivu;
+    NewCons->suivant=NULL;
     return NewCons;
 }
 
@@ -165,13 +174,19 @@ void ajouter_consultation(Parbre * abr, char * nm, char * date, char* motif, int
     Patient *CiblePatient= rechercher_patient(abr,nm);
     if(!CiblePatient)
     {
-        printf("On trouve pas le patient %s",nm);
-        exit(EXIT_FAILURE);
+//        printf("On trouve pas le patient %s",nm);
+//        exit(EXIT_FAILURE);
+        return;
     }
-    Consultation *temp=CiblePatient->ListeConsult;
-    for(;temp->suivant!=NULL;temp=temp->suivant);
-    temp->suivant= CreerConsult(date,motif,nivu);
-    CiblePatient->nbrconsult++;
+    else{
+        Consultation *temp=CiblePatient->ListeConsult;
+        if(temp!=NULL) {
+            for(;temp->suivant!=NULL;temp=temp->suivant);
+            temp->suivant= CreerConsult(date,motif,nivu);
+        }
+        else if(temp==NULL) CiblePatient->ListeConsult= CreerConsult(date,motif,nivu);
+        CiblePatient->nbrconsult++;
+    }
 }
 
 void supprimer_patient(Parbre * abr, char* nm)
@@ -237,4 +252,39 @@ void supprimer_patient(Parbre * abr, char* nm)
         free(target->prenom);
         free(target);
     }
+    else if(target->fils_droit!=NULL && target->fils_gauche!=NULL){
+
+    }
 }
+
+void maj(Parbre * abr, Parbre * abr2){
+    if(*abr) {
+        inserer_patient(abr2, (*abr)->nom, (*abr)->prenom);
+        Consultation * temp=(*abr)->ListeConsult;
+        if(temp!=NULL) {
+            for (;temp!=NULL;temp=temp->suivant) {
+                ajouter_consultation(abr2, (*abr)->nom, temp->date, temp->motif,temp->niveauUrg);
+            }
+        }
+        maj(&(*abr)->fils_gauche, abr2);
+        maj(&(*abr)->fils_droit, abr2);
+    }
+};
+
+void des(Parbre *abr){
+    if(*abr!=NULL) {
+        des(&(*abr)->fils_gauche);
+        des(&(*abr)->fils_droit);
+        supprimerConsltation((*abr)->ListeConsult);
+        free((*abr)->nom);
+        free((*abr)->prenom);
+        free((*abr));
+    }
+}
+
+//Parbre * zhong(Parbre *abr){
+//    if((*abr)->fils_gauche!=NULL){
+//        zhong(&(*abr)->fils_gauche);
+//    }
+//    else return abr;
+//}
