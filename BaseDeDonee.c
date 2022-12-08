@@ -28,6 +28,21 @@ int comparer(char * a, char *b){
     else if (strlen(a) < strlen(b)) return 0;
     else return -1;//si les 2 chaine sont les meme.
 }
+Patient *search_the_rightmost_of_lefttree(Parbre abr)
+{
+    if(abr==NULL)//排出一开始就是空的情况，防止报错
+        return NULL;
+    Patient *Return=abr;
+    if(abr->fils_gauche==NULL)//如果本身就是最大结点
+        return Return;
+    else
+        Return=Return->fils_gauche;
+    while(Return->fils_droit!=NULL)//运行直到右子树为空
+    {
+        Return=Return->fils_droit;
+    }
+    return Return;
+}
 
 void supprimerConsltation(Consultation *Liste)
 {
@@ -253,7 +268,35 @@ void supprimer_patient(Parbre * abr, char* nm)
         free(target);
     }
     else if(target->fils_droit!=NULL && target->fils_gauche!=NULL){
+    //左右子树均不为空，这里我选择将左子树的最右的结点作为替换结点
+    Patient *replace= search_the_rightmost_of_lefttree(target);
+    if(!replace){
+        printf("Arbre Nul!");
+        return;
+    }
 
+    Patient *ParentOfTarget= rechercher_node_parent(abr,target->nom);
+    Patient *ParentOfReplace= rechercher_node_parent(abr,replace->nom);
+    //这里仍然分2大种情况讨论，替换结点有左孩子或本身是叶子
+    if(target->fils_gauche==NULL)
+        //替换结点无左孩子
+        ParentOfReplace->fils_droit=NULL;
+    else
+        //替换结点有左孩子
+        ParentOfReplace->fils_droit=replace->fils_gauche;//这里肯定是替换结点的父节点的右指针指向替换结点的左孩子
+
+    replace->fils_gauche=target->fils_gauche;
+    replace->fils_droit=target->fils_droit;
+    if(ParentOfTarget->fils_droit==target)
+        ParentOfTarget->fils_droit=replace;
+    else
+        ParentOfTarget->fils_gauche=replace;
+    replace->fils_droit=target->fils_droit;
+    replace->fils_gauche=target->fils_gauche;
+    supprimerConsltation(target->ListeConsult);
+    free(target->nom);
+    free(target->prenom);
+    free(target);
     }
 }
 
