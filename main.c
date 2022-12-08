@@ -41,12 +41,14 @@ int main()
         scanf("%d",&input);
         switch (input) {
             case 1:
+                getchar();
                 printf("vous avez choisi ajouter un patient, entrez le prenom et nom :\n");
                 scanf("%s %s",pr,nm);
                 inserer_patient(&head,nm,pr);
                 printf("OK\n");
                 break;
             case 2:
+                getchar();
                 printf("vous avez choisi ajouter une consultation ¨¤ un patient, entrez le nom du patient:\n");
                 scanf("%s",nm);
                 printf("Entrez le data et niveau de urgence:\n");
@@ -61,21 +63,24 @@ int main()
                 getchar();
                 printf("vous avez choisi afficher une fiche m¨¦dicale, entrez le nom du patient:\n");
                 scanf("%s",nm);
-                afficher_fiche(&head2,nm);
+                afficher_fiche(&head,nm);
                 printf("OK\n");
                 break;
             case 4:
+                getchar();
                 printf("vous avez choisi afficher la liste des patients\n");
-                afficher_patients(&head2);
+                afficher_patients(&head);
                 printf("OK\n");
                 break;
             case 5:
+                getchar();
                 printf("vous avez choisi supprimer un patient, entrez le nom du patient:\n");
                 scanf("%s",nm);
                 supprimer_patient(&head,nm);
                 printf("OK\n");
                 break;
             case 6:
+                getchar();
                 printf("vous avez choisi supprimer un patient, entrez le nom du patient:\n");
                 des(&head2);
                 head2=NULL;
