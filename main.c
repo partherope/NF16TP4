@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include "BaseDeDonee.h"
 #include <string.h>
-//»¼ÕßµÄÃû×ÖºÍÐÕÃûÊÇmallocµÄ£¬ÐèÒªÊÖ¶¯ÊÍ·Å
-//ConsultationÊÇÁ´±í£¬Ò»ÑùÐèÒªÊÍ·Å
-//×îºóÊÍ·ÅÊ÷
+//ï¿½ï¿½ï¿½ßµï¿½ï¿½ï¿½ï¿½Öºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½mallocï¿½Ä£ï¿½ï¿½ï¿½Òªï¿½Ö¶ï¿½ï¿½Í·ï¿½
+//Consultationï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Òªï¿½Í·ï¿½
+//ï¿½ï¿½ï¿½ï¿½Í·ï¿½ï¿½ï¿½
 int main()
 {
     Patient *test=NULL,*test2=NULL;
@@ -31,11 +31,11 @@ int main()
 
     while(1){
         printf("1. Ajouter un patient\n"
-               "2. Ajouter une consultation ¨¤ un patient\n"
-               "3. Afficher une fiche m¨¦dicale\n"
+               "2. Ajouter une consultation ï¿½ï¿½ un patient\n"
+               "3. Afficher une fiche mï¿½ï¿½dicale\n"
                "4. Afficher la liste des patients\n"
                "5. Supprimer un patient\n"
-               "6. Copier ou mettre ¨¤ jour la liste des patients\n"
+               "6. Copier ou mettre ï¿½ï¿½ jour la liste des patients\n"
                "7. Quitter\n");
         printf("Choisissez le fonction :\n");
         scanf("%d",&input);
@@ -49,7 +49,7 @@ int main()
                 break;
             case 2:
                 getchar();
-                printf("vous avez choisi ajouter une consultation ¨¤ un patient, entrez le nom du patient:\n");
+                printf("vous avez choisi ajouter une consultation ï¿½ï¿½ un patient, entrez le nom du patient:\n");
                 scanf("%s",nm);
                 printf("Entrez le data et niveau de urgence:\n");
                 scanf("%s %d",date,&niv);
@@ -61,7 +61,7 @@ int main()
                 break;
             case 3:
                 getchar();
-                printf("vous avez choisi afficher une fiche m¨¦dicale, entrez le nom du patient:\n");
+                printf("vous avez choisi afficher une fiche mï¿½ï¿½dicale, entrez le nom du patient:\n");
                 scanf("%s",nm);
                 afficher_fiche(&head,nm);
                 printf("OK\n");

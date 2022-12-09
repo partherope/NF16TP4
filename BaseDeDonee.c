@@ -19,7 +19,7 @@ char* MajusculeString(char *a)
 
 int comparer(char * a, char *b){
     int i=0;
-    while(i<strlen(a) || i<strlen(a)){
+    while(i<strlen(a) || i<strlen(b)){
         if(*(a+i) > *(b+i)) return 1;
         else if (*(a+i) < *(b+i)) return 0;
         else if (*(a+i) == *(b+i)) i++;
@@ -141,6 +141,7 @@ Patient * rechercher_patient(Parbre * abr, char* nm)
 
 void afficher_fiche(Parbre * abr, char* nm)
 {
+    nm= MajusculeString(nm);
     Patient *cible= rechercher_patient(abr,nm);
     if(!cible)
     {
@@ -206,6 +207,7 @@ void ajouter_consultation(Parbre * abr, char * nm, char * date, char* motif, int
 
 void supprimer_patient(Parbre * abr, char* nm)
 {
+    nm= MajusculeString(nm);
     Patient *target= rechercher_patient(abr,nm);
     if(target->fils_droit==NULL && target->fils_gauche==NULL)//左右子树均空
     {
