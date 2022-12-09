@@ -30,14 +30,14 @@ int comparer(char * a, char *b){
 }
 Patient *search_the_rightmost_of_lefttree(Parbre abr)
 {
-    if(abr==NULL)//æŽ’å‡ºä¸€å¼€å§‹å°±æ˜¯ç©ºçš„æƒ…å†µï¼Œé˜²æ­¢æŠ¥é”™
+    if(abr==NULL)//ÅÅ³öÒ»¿ªÊ¼¾ÍÊÇ¿ÕµÄÇé¿ö£¬·ÀÖ¹±¨´í
         return NULL;
     Patient *Return=abr;
-    if(abr->fils_gauche==NULL)//å¦‚æžœæœ¬èº«å°±æ˜¯æœ€å¤§ç»“ç‚¹
+    if(abr->fils_gauche==NULL)//Èç¹û±¾Éí¾ÍÊÇ×î´ó½áµã
         return Return;
     else
         Return=Return->fils_gauche;
-    while(Return->fils_droit!=NULL)//è¿è¡Œç›´åˆ°å³å­æ ‘ä¸ºç©º
+    while(Return->fils_droit!=NULL)//ÔËÐÐÖ±µ½ÓÒ×ÓÊ÷Îª¿Õ
     {
         Return=Return->fils_droit;
     }
@@ -55,7 +55,7 @@ void supprimerConsltation(Consultation *Liste)
     free(Liste);
 }
 
-Patient * rechercher_node_parent(Parbre * abr, char* nm)//å¯»æ‰¾ç›®æ ‡ç»“ç‚¹çš„çˆ¶èŠ‚ç‚¹
+Patient * rechercher_node_parent(Parbre * abr, char* nm)//Ñ°ÕÒÄ¿±ê½áµãµÄ¸¸½Úµã
 {
     Patient *temp=(*abr);
     Patient *Parent=temp;
@@ -96,12 +96,12 @@ Patient *CreerPatient(char *nm,char *pr)
 void inserer_patient(Parbre *abr, char *nm,char *pr)
 {
     char *temp=NULL;
-    temp= MajusculeString(nm);//å‚»é€¼cè¯­è¨€ï¼Œéžè¦è¿™ä¹ˆå†™æ‰èƒ½ä¸å’Œå±€éƒ¨å˜é‡å†²çª
+    temp= MajusculeString(nm);//Éµ±ÆcÓïÑÔ£¬·ÇÒªÕâÃ´Ð´²ÅÄÜ²»ºÍ¾Ö²¿±äÁ¿³åÍ»
     if((*abr)==NULL)
     {
 
         (*abr) = CreerPatient(nm,pr);
-    }//l'arbre est vide oÃ¹ on arrive Ã  notre noeud cible
+    }//l'arbre est vide o¨´ on arrive ¨¤ notre noeud cible
     else if(comparer((*abr)->nom, temp)==1)
     {
 
@@ -145,11 +145,11 @@ void afficher_fiche(Parbre * abr, char* nm)
     Patient *cible= rechercher_patient(abr,nm);
     if(!cible)
     {
-//        printf("Pas de patient %s",nm); //åœ¨rechercherå‡½æ•°ä¸­å·²ç»ä¼šæç¤ºäº†
+//        printf("Pas de patient %s",nm); //ÔÚrechercherº¯ÊýÖÐÒÑ¾­»áÌáÊ¾ÁË
         return;
     }
     printf("Informations de le/la patient:\n",nm);
-    printf("Nom:%s, PrÃ©nom:%s, numbre de consultations:%d\n",cible->nom,cible->prenom, cible->nbrconsult);
+    printf("Nom:%s, Pr¨¦nom:%s, numbre de consultations:%d\n",cible->nom,cible->prenom, cible->nbrconsult);
     for(Consultation *temp=cible->ListeConsult;temp!=NULL;temp=temp->suivant)
     {
         printf("Date:%s | Motif:%s | Niveau urgent:%d\n",temp->date,temp->motif,temp->niveauUrg);
@@ -161,7 +161,7 @@ void afficher_patients(Parbre * abr)
 {
     if(*abr)
     {
-        printf("Nom: %s | PrÃ©nom: %s\n",(*abr)->nom,(*abr)->prenom);
+        printf("Nom: %s | Pr¨¦nom: %s\n",(*abr)->nom,(*abr)->prenom);
         afficher_patients(&(*abr)->fils_gauche);
         afficher_patients(&(*abr)->fils_droit);
     }
@@ -209,17 +209,20 @@ void supprimer_patient(Parbre * abr, char* nm)
 {
     nm= MajusculeString(nm);
     Patient *target= rechercher_patient(abr,nm);
-    if(target->fils_droit==NULL && target->fils_gauche==NULL)//å·¦å³å­æ ‘å‡ç©º
+    if(target==NULL)
+        return;
+    if(target->fils_droit==NULL && target->fils_gauche==NULL)//×óÓÒ×ÓÊ÷¾ù¿Õ
     {
         Patient *Parent= rechercher_node_parent(abr,nm);
-        if(Parent==target)//åˆ é™¤çš„ç»“ç‚¹æ­£å¥½æ˜¯æ ¹ç»“ç‚¹
+        if(Parent==target)//É¾³ýµÄ½áµãÕýºÃÊÇ¸ù½áµã
         {
+            (*abr)=NULL;
             supprimerConsltation(target->ListeConsult);
             free(target->nom);
             free(target->prenom);
             free(target);
         }
-        else if(Parent->fils_gauche==target)//è¢«åˆ é™¤çš„ç»“ç‚¹å±žäºŽå·¦å­æ ‘
+        else if(Parent->fils_gauche==target)//±»É¾³ýµÄ½áµãÊôÓÚ×ó×ÓÊ÷
         {
             Parent->fils_gauche=NULL;
             supprimerConsltation(target->ListeConsult);
@@ -227,7 +230,7 @@ void supprimer_patient(Parbre * abr, char* nm)
             free(target->prenom);
             free(target);
         }
-        else if(Parent->fils_droit==target)//è¢«åˆ é™¤çš„ç»“ç‚¹å±žäºŽå³å­æ ‘
+        else if(Parent->fils_droit==target)//±»É¾³ýµÄ½áµãÊôÓÚÓÒ×ÓÊ÷
         {
             Parent->fils_droit=NULL;
             supprimerConsltation(target->ListeConsult);
@@ -237,9 +240,17 @@ void supprimer_patient(Parbre * abr, char* nm)
         }
 
     }
-    else if(target->fils_droit==NULL && target->fils_gauche!=NULL)//å³å­æ ‘ç©ºï¼Œå·¦å­æ ‘éžç©º
+    else if(target->fils_droit==NULL && target->fils_gauche!=NULL)//ÓÒ×ÓÊ÷¿Õ£¬×ó×ÓÊ÷·Ç¿Õ
     {
         Patient *Parent=rechercher_node_parent(abr,nm);
+        if(Parent==target)//É¾³ýµÄ½áµãÕýºÃÊÇ¸ù½áµã
+        {
+            (*abr)=target->fils_gauche;
+            supprimerConsltation(target->ListeConsult);
+            free(target->nom);
+            free(target->prenom);
+            free(target);
+        }
         if(comparer(Parent->nom,target->nom)==1)
         {
             Parent->fils_gauche=target->fils_gauche;
@@ -253,9 +264,17 @@ void supprimer_patient(Parbre * abr, char* nm)
         free(target->prenom);
         free(target);
     }
-    else if(target->fils_droit!=NULL && target->fils_gauche==NULL)//å·¦å­æ ‘ç©ºï¼Œå³å­æ ‘éžç©º
+    else if(target->fils_droit!=NULL && target->fils_gauche==NULL)//×ó×ÓÊ÷¿Õ£¬ÓÒ×ÓÊ÷·Ç¿Õ
     {
         Patient *Parent=rechercher_node_parent(abr,nm);
+        if(Parent==target)//É¾³ýµÄ½áµãÕýºÃÊÇ¸ù½áµã
+        {
+            (*abr)=target->fils_droit;
+            supprimerConsltation(target->ListeConsult);
+            free(target->nom);
+            free(target->prenom);
+            free(target);
+        }
         if(comparer(Parent->nom,target->nom)==1)
         {
             Parent->fils_gauche=target->fils_droit;
@@ -270,7 +289,7 @@ void supprimer_patient(Parbre * abr, char* nm)
         free(target);
     }
     else if(target->fils_droit!=NULL && target->fils_gauche!=NULL){
-    //å·¦å³å­æ ‘å‡ä¸ä¸ºç©ºï¼Œè¿™é‡Œæˆ‘é€‰æ‹©å°†å·¦å­æ ‘çš„æœ€å³çš„ç»“ç‚¹ä½œä¸ºæ›¿æ¢ç»“ç‚¹
+    //×óÓÒ×ÓÊ÷¾ù²»Îª¿Õ£¬ÕâÀïÎÒÑ¡Ôñ½«×ó×ÓÊ÷µÄ×îÓÒµÄ½áµã×÷ÎªÌæ»»½áµã
     Patient *replace= search_the_rightmost_of_lefttree(target);
     if(!replace){
         printf("Arbre Nul!");
@@ -279,13 +298,13 @@ void supprimer_patient(Parbre * abr, char* nm)
 
     Patient *ParentOfTarget= rechercher_node_parent(abr,target->nom);
     Patient *ParentOfReplace= rechercher_node_parent(abr,replace->nom);
-    //è¿™é‡Œä»ç„¶åˆ†2å¤§ç§æƒ…å†µè®¨è®ºï¼Œæ›¿æ¢ç»“ç‚¹æœ‰å·¦å­©å­æˆ–æœ¬èº«æ˜¯å¶å­
+    //ÕâÀïÈÔÈ»·Ö2´óÖÖÇé¿öÌÖÂÛ£¬Ìæ»»½áµãÓÐ×óº¢×Ó»ò±¾ÉíÊÇÒ¶×Ó
     if(target->fils_gauche==NULL)
-        //æ›¿æ¢ç»“ç‚¹æ— å·¦å­©å­
+        //Ìæ»»½áµãÎÞ×óº¢×Ó
         ParentOfReplace->fils_droit=NULL;
     else
-        //æ›¿æ¢ç»“ç‚¹æœ‰å·¦å­©å­
-        ParentOfReplace->fils_droit=replace->fils_gauche;//è¿™é‡Œè‚¯å®šæ˜¯æ›¿æ¢ç»“ç‚¹çš„çˆ¶èŠ‚ç‚¹çš„å³æŒ‡é’ˆæŒ‡å‘æ›¿æ¢ç»“ç‚¹çš„å·¦å­©å­
+        //Ìæ»»½áµãÓÐ×óº¢×Ó
+        ParentOfReplace->fils_droit=replace->fils_gauche;//ÕâÀï¿Ï¶¨ÊÇÌæ»»½áµãµÄ¸¸½ÚµãµÄÓÒÖ¸ÕëÖ¸ÏòÌæ»»½áµãµÄ×óº¢×Ó
 
     replace->fils_gauche=target->fils_gauche;
     replace->fils_droit=target->fils_droit;
