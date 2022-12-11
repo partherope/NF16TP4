@@ -212,6 +212,7 @@ void supprimer_patient(Parbre * abr, char* nm)
             free(target->nom);
             free(target->prenom);
             free(target);
+            return;
         }
         else if(Parent->fils_gauche==target)//Le n?ud supprim¨¦ appartient au sous-arbre de gauche
         {
@@ -241,6 +242,7 @@ void supprimer_patient(Parbre * abr, char* nm)
             free(target->nom);
             free(target->prenom);
             free(target);
+            return;
         }
         if(comparer(Parent->nom,target->nom)==1)
         {
@@ -265,6 +267,7 @@ void supprimer_patient(Parbre * abr, char* nm)
             free(target->nom);
             free(target->prenom);
             free(target);
+            return;
         }
         if(comparer(Parent->nom,target->nom)==1)
         {
