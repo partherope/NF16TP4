@@ -81,10 +81,10 @@ int main()
                 break;
             case 6:
                 getchar();
-                printf("vous avez choisi supprimer un patient, entrez le nom du patient:\n");
                 des(&head2);
                 head2=NULL;
                 maj(&head,&head2);
+                afficher_patients(&head2);
                 break;
             case 7:
                 des(&head);

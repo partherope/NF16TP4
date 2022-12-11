@@ -55,7 +55,7 @@ void supprimerConsltation(Consultation *Liste)
     free(Liste);
 }
 
-Patient * rechercher_node_parent(Parbre * abr, char* nm)//寻找目标结点的父节点
+Patient * rechercher_node_parent(Parbre * abr, char* nm)//寻找目标结点的父节点,如果结点无父节点，则返回其本身
 {
     Patient *temp=(*abr);
     Patient *Parent=temp;
@@ -96,7 +96,7 @@ Patient *CreerPatient(char *nm,char *pr)
 void inserer_patient(Parbre *abr, char *nm,char *pr)
 {
     char *temp=NULL;
-    temp= MajusculeString(nm);//傻逼c语言，非要这么写才能不和局部变量冲突
+    temp= MajusculeString(nm);
     if((*abr)==NULL)
     {
 
@@ -295,25 +295,67 @@ void supprimer_patient(Parbre * abr, char* nm)
         printf("Arbre Nul!");
         return;
     }
-
-    Patient *ParentOfTarget= rechercher_node_parent(abr,target->nom);
+    Patient *ParentOfTarget= rechercher_node_parent(abr,target->nom);//
     Patient *ParentOfReplace= rechercher_node_parent(abr,replace->nom);
-    //这里仍然分2大种情况讨论，替换结点有左孩子或本身是叶子
-    if(target->fils_gauche==NULL)
-        //替换结点无左孩子
-        ParentOfReplace->fils_droit=NULL;
-    else
-        //替换结点有左孩子
-        ParentOfReplace->fils_droit=replace->fils_gauche;//这里肯定是替换结点的父节点的右指针指向替换结点的左孩子
+    //目标节点是根结点的情况
+    if(ParentOfTarget==target)
+    {
+        if(ParentOfReplace==ParentOfTarget)//如果两个结点刚好相邻
+        {
+            if(ParentOfReplace->fils_droit==replace)
+                ParentOfReplace->fils_droit=replace->fils_gauche;
+            else if(ParentOfReplace->fils_gauche==replace)
+                ParentOfReplace->fils_gauche=replace->fils_gauche;
+        }
+        if(replace->fils_gauche==NULL)//替换节点没有左孩子
+        {
+            replace->fils_gauche=target->fils_gauche;
+            replace->fils_droit=target->fils_droit;
+            (*abr)=replace;
+        }
+        else if(replace->fils_gauche)
+        {
+            if(ParentOfReplace->fils_droit==replace)
+                ParentOfReplace->fils_droit=replace->fils_gauche;
+            else if(ParentOfReplace->fils_gauche==replace)
+                ParentOfReplace->fils_gauche=replace->fils_gauche;
+            replace->fils_gauche=target->fils_gauche;
+            replace->fils_droit=target->fils_droit;
+            (*abr)=replace;
+        }
+    }
+    else//被删除结点不是根结点
+    {
+        //还是分成2种情况，一种替换结点有左子树，另一种没有
+        if(replace->fils_gauche==NULL)//无左子树
+        {
+            if(ParentOfTarget->fils_gauche==target)
+                ParentOfTarget->fils_gauche=replace;
+            else if(ParentOfTarget->fils_droit=target)
+                ParentOfTarget->fils_droit=replace;
+            if(ParentOfReplace->fils_gauche==replace)
+                ParentOfReplace->fils_gauche=NULL;
+            else if(ParentOfReplace->fils_droit==replace)
+                ParentOfReplace->fils_droit=NULL;
+            replace->fils_gauche=target->fils_gauche;
+            replace->fils_droit=target->fils_droit;
+        }
+        else if(replace->fils_gauche!=NULL)//有左子树的情况
+        {
+            if(ParentOfReplace->fils_gauche==replace)
+                ParentOfReplace->fils_gauche=replace->fils_gauche;
+            else if(ParentOfReplace->fils_droit==replace)
+                ParentOfReplace->fils_droit=replace->fils_gauche;
 
-    replace->fils_gauche=target->fils_gauche;
-    replace->fils_droit=target->fils_droit;
-    if(ParentOfTarget->fils_droit==target)
-        ParentOfTarget->fils_droit=replace;
-    else
-        ParentOfTarget->fils_gauche=replace;
-    replace->fils_droit=target->fils_droit;
-    replace->fils_gauche=target->fils_gauche;
+            if(ParentOfTarget->fils_gauche==target)
+                ParentOfTarget->fils_gauche=replace;
+            else if(ParentOfTarget->fils_droit==target)
+                ParentOfTarget->fils_droit=replace;
+
+            replace->fils_gauche=target->fils_gauche;
+            replace->fils_droit=target->fils_droit;
+        }
+    }
     supprimerConsltation(target->ListeConsult);
     free(target->nom);
     free(target->prenom);
