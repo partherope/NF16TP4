@@ -30,14 +30,14 @@ int comparer(char * a, char *b){
 }
 Patient *search_the_rightmost_of_lefttree(Parbre abr)
 {
-    if(abr==NULL)//排出一开始就是空的情况，防止报错
+    if(abr==NULL)//Exclure la situation où il est vide au début pour éviter le signalement d'erreurs
         return NULL;
     Patient *Return=abr;
-    if(abr->fils_gauche==NULL)//如果本身就是最大结点
+    if(abr->fils_gauche==NULL)//Si lui-même est le plus grand n?ud
         return Return;
     else
         Return=Return->fils_gauche;
-    while(Return->fils_droit!=NULL)//运行直到右子树为空
+    while(Return->fils_droit!=NULL)//S'exécute jusqu'à ce que la sous-arborescence de droite soit vide
     {
         Return=Return->fils_droit;
     }
@@ -55,7 +55,7 @@ void supprimerConsltation(Consultation *Liste)
     free(Liste);
 }
 
-Patient * rechercher_node_parent(Parbre * abr, char* nm)//寻找目标结点的父节点,如果结点无父节点，则返回其本身
+Patient * rechercher_node_parent(Parbre * abr, char* nm)//Trouver le n?ud parent du n?ud cible, si le n?ud n'a pas de n?ud parent, se retourner
 {
     Patient *temp=(*abr);
     Patient *Parent=temp;
@@ -143,11 +143,7 @@ void afficher_fiche(Parbre * abr, char* nm)
 {
     nm= MajusculeString(nm);
     Patient *cible= rechercher_patient(abr,nm);
-    if(!cible)
-    {
-//        printf("Pas de patient %s",nm); //在rechercher函数中已经会提示了
-        return;
-    }
+    if(!cible) return;
     printf("Informations de le/la patient:\n",nm);
     printf("Nom:%s, Prénom:%s, numbre de consultations:%d\n",cible->nom,cible->prenom, cible->nbrconsult);
     for(Consultation *temp=cible->ListeConsult;temp!=NULL;temp=temp->suivant)
@@ -188,12 +184,7 @@ Consultation * CreerConsult(char * date, char* motif, int nivu)
 void ajouter_consultation(Parbre * abr, char * nm, char * date, char* motif, int nivu)
 {
     Patient *CiblePatient= rechercher_patient(abr,nm);
-    if(!CiblePatient)
-    {
-//        printf("On trouve pas le patient %s",nm);
-//        exit(EXIT_FAILURE);
-        return;
-    }
+    if(!CiblePatient) return;
     else{
         Consultation *temp=CiblePatient->ListeConsult;
         if(temp!=NULL) {
@@ -211,31 +202,45 @@ void supprimer_patient(Parbre * abr, char* nm)
     Patient *target= rechercher_patient(abr,nm);
     if(target==NULL)
         return;
-    if(target->fils_droit==NULL && target->fils_gauche==NULL)//左右子树均空
+    if(target->fils_droit==NULL && target->fils_gauche==NULL)//Les sous-arborescences gauche et droite sont vides
     {
         Patient *Parent= rechercher_node_parent(abr,nm);
-        if(Parent==target)//删除的结点正好是根结点
+        if(Parent==target)//Le n?ud supprimé est exactement le n?ud racine
+        {
             (*abr)=NULL;
-        else if(Parent->fils_gauche==target)//被删除的结点属于左子树
+            supprimerConsltation(target->ListeConsult);
+            free(target->nom);
+            free(target->prenom);
+            free(target);
+        }
+        else if(Parent->fils_gauche==target)//Le n?ud supprimé appartient au sous-arbre de gauche
+        {
             Parent->fils_gauche=NULL;
-        else if(Parent->fils_droit==target)//被删除的结点属于右子树
+            supprimerConsltation(target->ListeConsult);
+            free(target->nom);
+            free(target->prenom);
+            free(target);
+        }
+        else if(Parent->fils_droit==target)//Le n?ud supprimé appartient au sous-arbre de droite
+        {
             Parent->fils_droit=NULL;
-        supprimerConsltation(target->ListeConsult);
-        free(target->nom);
-        free(target->prenom);
-        free(target);
+            supprimerConsltation(target->ListeConsult);
+            free(target->nom);
+            free(target->prenom);
+            free(target);
+        }
+
     }
-    else if(target->fils_droit==NULL && target->fils_gauche!=NULL)//右子树空，左子树非空
+    else if(target->fils_droit==NULL && target->fils_gauche!=NULL)//Le sous-arbre droit est vide, le sous-arbre gauche n'est pas vide
     {
         Patient *Parent=rechercher_node_parent(abr,nm);
-        if(Parent==target)//删除的结点正好是根结点
+        if(Parent==target)//Le n?ud supprimé est exactement le n?ud racine
         {
             (*abr)=target->fils_gauche;
             supprimerConsltation(target->ListeConsult);
             free(target->nom);
             free(target->prenom);
             free(target);
-            return;
         }
         if(comparer(Parent->nom,target->nom)==1)
         {
@@ -250,17 +255,16 @@ void supprimer_patient(Parbre * abr, char* nm)
         free(target->prenom);
         free(target);
     }
-    else if(target->fils_droit!=NULL && target->fils_gauche==NULL)//左子树空，右子树非空
+    else if(target->fils_droit!=NULL && target->fils_gauche==NULL)//Le sous-arbre de gauche est vide, le sous-arbre de droite n'est pas vide
     {
         Patient *Parent=rechercher_node_parent(abr,nm);
-        if(Parent==target)//删除的结点正好是根结点
+        if(Parent==target)//Le n?ud supprimé est exactement le n?ud racine
         {
             (*abr)=target->fils_droit;
             supprimerConsltation(target->ListeConsult);
             free(target->nom);
             free(target->prenom);
             free(target);
-            return;
         }
         if(comparer(Parent->nom,target->nom)==1)
         {
@@ -276,7 +280,7 @@ void supprimer_patient(Parbre * abr, char* nm)
         free(target);
     }
     else if(target->fils_droit!=NULL && target->fils_gauche!=NULL){
-    //左右子树均不为空，这里我选择将左子树的最右的结点作为替换结点
+    //Les sous-arbres gauche et droit ne sont pas vides, ici je choisis d'utiliser le n?ud le plus à droite du sous-arbre gauche comme n?ud de remplacement
     Patient *replace= search_the_rightmost_of_lefttree(target);
     if(!replace){
         printf("Arbre Nul!");
@@ -284,17 +288,17 @@ void supprimer_patient(Parbre * abr, char* nm)
     }
     Patient *ParentOfTarget= rechercher_node_parent(abr,target->nom);//
     Patient *ParentOfReplace= rechercher_node_parent(abr,replace->nom);
-    //目标节点是根结点的情况
+    //Le cas où le n?ud cible est le n?ud racine
     if(ParentOfTarget==target)
     {
-        if(ParentOfReplace==ParentOfTarget)//如果两个结点刚好相邻
+        if(ParentOfReplace==ParentOfTarget)//Si deux n?uds se trouvent être adjacents
         {
             if(ParentOfReplace->fils_droit==replace)
                 ParentOfReplace->fils_droit=replace->fils_gauche;
             else if(ParentOfReplace->fils_gauche==replace)
                 ParentOfReplace->fils_gauche=replace->fils_gauche;
         }
-        if(replace->fils_gauche==NULL)//替换节点没有左孩子
+        if(replace->fils_gauche==NULL)//Le n?ud de remplacement n'a pas d'enfant gauche
         {
             replace->fils_gauche=target->fils_gauche;
             replace->fils_droit=target->fils_droit;
@@ -311,9 +315,9 @@ void supprimer_patient(Parbre * abr, char* nm)
             (*abr)=replace;
         }
     }
-    else//被删除结点不是根结点
+    else//Le n?ud supprimé n'est pas le n?ud racine
     {
-        //还是分成2种情况，一种替换结点有左子树，另一种没有
+        //Toujours divisé en deux cas, un n?ud de remplacement a un sous-arbre gauche, et l'autre n'en a pas.
         if(replace->fils_gauche==NULL)//无左子树
         {
             if(ParentOfTarget->fils_gauche==target)
@@ -327,7 +331,7 @@ void supprimer_patient(Parbre * abr, char* nm)
             replace->fils_gauche=target->fils_gauche;
             replace->fils_droit=target->fils_droit;
         }
-        else if(replace->fils_gauche!=NULL)//有左子树的情况
+        else if(replace->fils_gauche!=NULL)//sous abr
         {
             if(ParentOfReplace->fils_gauche==replace)
                 ParentOfReplace->fils_gauche=replace->fils_gauche;
@@ -375,9 +379,3 @@ void des(Parbre *abr){
     }
 }
 
-//Parbre * zhong(Parbre *abr){
-//    if((*abr)->fils_gauche!=NULL){
-//        zhong(&(*abr)->fils_gauche);
-//    }
-//    else return abr;
-//}
