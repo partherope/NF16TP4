@@ -215,30 +215,15 @@ void supprimer_patient(Parbre * abr, char* nm)
     {
         Patient *Parent= rechercher_node_parent(abr,nm);
         if(Parent==target)//删除的结点正好是根结点
-        {
             (*abr)=NULL;
-            supprimerConsltation(target->ListeConsult);
-            free(target->nom);
-            free(target->prenom);
-            free(target);
-        }
         else if(Parent->fils_gauche==target)//被删除的结点属于左子树
-        {
             Parent->fils_gauche=NULL;
-            supprimerConsltation(target->ListeConsult);
-            free(target->nom);
-            free(target->prenom);
-            free(target);
-        }
         else if(Parent->fils_droit==target)//被删除的结点属于右子树
-        {
             Parent->fils_droit=NULL;
-            supprimerConsltation(target->ListeConsult);
-            free(target->nom);
-            free(target->prenom);
-            free(target);
-        }
-
+        supprimerConsltation(target->ListeConsult);
+        free(target->nom);
+        free(target->prenom);
+        free(target);
     }
     else if(target->fils_droit==NULL && target->fils_gauche!=NULL)//右子树空，左子树非空
     {
@@ -250,6 +235,7 @@ void supprimer_patient(Parbre * abr, char* nm)
             free(target->nom);
             free(target->prenom);
             free(target);
+            return;
         }
         if(comparer(Parent->nom,target->nom)==1)
         {
@@ -274,6 +260,7 @@ void supprimer_patient(Parbre * abr, char* nm)
             free(target->nom);
             free(target->prenom);
             free(target);
+            return;
         }
         if(comparer(Parent->nom,target->nom)==1)
         {
