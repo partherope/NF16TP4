@@ -1,4 +1,4 @@
-#include "BaseDeDonee.h"
+#include "tp4.h"
 #include <string.h>
 char* MajusculeString(char *a)
 {
@@ -51,8 +51,8 @@ void supprimerConsltation(Consultation *Liste)
         supprimerConsltation(Liste->suivant);
         free(Liste->date);
         free(Liste->motif);
+        free(Liste);
     }
-    free(Liste);
 }
 
 Patient * rechercher_node_parent(Parbre * abr, char* nm)//Trouver le n?ud parent du n?ud cible, si le n?ud n'a pas de n?ud parent, se retourner
@@ -321,7 +321,7 @@ void supprimer_patient(Parbre * abr, char* nm)
     else//Le n?ud supprim¨¦ n'est pas le n?ud racine
     {
         //Toujours divis¨¦ en deux cas, un n?ud de remplacement a un sous-arbre gauche, et l'autre n'en a pas.
-        if(replace->fils_gauche==NULL)//ÎÞ×ó×ÓÊ÷
+        if(replace->fils_gauche==NULL)//non arbre gauche
         {
             if(ParentOfTarget->fils_gauche==target)
                 ParentOfTarget->fils_gauche=replace;
